@@ -1,10 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Google tag (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZWN759NS6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9ZWN759NS6');
+
+  function trackToolClick(toolName, destination) {
+    gtag('event', 'click_tool', {
+      tool_name: toolName,
+      destination_url: destination,
+      page_location: window.location.href
+    });
+  }
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VAPOZEIRO — Hub do Marítimo</title>
-<meta name="description" content="Ferramentas operacionais para profissionais do setor marítimo. Maré, inteligência de mercado, monitoramento portuário e planejamento de carga.">
+<meta name="description" content="Ferramentas operacionais para profissionais do setor marítimo. Maré, inteligência de mercado, monitoramento portuário, planejamento de carga e consulta simultânea em todas as NORMAMs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -36,6 +54,7 @@ body {
   overflow-x: hidden;
 }
 
+/* ── NOISE OVERLAY ── */
 body::before {
   content: '';
   position: fixed;
@@ -46,6 +65,7 @@ body::before {
   z-index: 0;
 }
 
+/* ── GRID BG ── */
 body::after {
   content: '';
   position: fixed;
@@ -58,6 +78,7 @@ body::after {
   z-index: 0;
 }
 
+/* ── NAV ── */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -145,6 +166,7 @@ nav {
   50% { box-shadow: 0 0 0 5px rgba(0,255,136,0); opacity: .7; }
 }
 
+/* ── HERO ── */
 .hero {
   position: relative;
   z-index: 1;
@@ -158,6 +180,7 @@ nav {
   overflow: hidden;
 }
 
+/* radial glow behind hero */
 .hero-glow {
   position: absolute;
   top: 50%; left: 50%;
@@ -167,6 +190,7 @@ nav {
   pointer-events: none;
 }
 
+/* animated radar ring */
 .radar-ring {
   position: absolute;
   top: 50%; left: 50%;
@@ -284,6 +308,7 @@ nav {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── SECTION ── */
 section {
   position: relative;
   z-index: 1;
@@ -330,6 +355,7 @@ section {
   margin-bottom: 48px;
 }
 
+/* ── TOOL CARDS ── */
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -434,11 +460,13 @@ section {
   transform: translateX(3px);
 }
 
+/* card accent colors */
 .card-green  { --card-accent: #00ff88; }
 .card-blue   { --card-accent: #38bdf8; }
 .card-yellow { --card-accent: #ffd000; }
 .card-red    { --card-accent: #ff7060; }
 
+/* ── DIVIDER ── */
 .divider {
   position: relative;
   z-index: 1;
@@ -447,6 +475,7 @@ section {
   margin: 0 24px;
 }
 
+/* ── STATS BAR ── */
 .stats-bar {
   position: relative;
   z-index: 1;
@@ -489,6 +518,7 @@ section {
   margin-top: 6px;
 }
 
+/* ── ABOUT ── */
 .about-grid {
   display: block;
   max-width: 600px;
@@ -508,6 +538,22 @@ section {
 
 .about-text strong { color: var(--text); }
 
+.about-mono {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 2;
+}
+
+.about-mono .k { color: var(--signal); }
+.about-mono .v { color: var(--accent); }
+.about-mono .c { color: var(--muted); }
+
+/* ── CONTACT ── */
 .contact-card {
   display: flex;
   align-items: center;
@@ -547,6 +593,7 @@ section {
   .contact-card .btn-primary { margin-left: 0 !important; width: 100%; text-align: center; }
 }
 
+/* ── FOOTER ── */
 footer {
   position: relative;
   z-index: 1;
@@ -595,6 +642,7 @@ footer {
   letter-spacing: 1px;
 }
 
+/* ── SCROLL REVEAL ── */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -606,6 +654,7 @@ footer {
   transform: translateY(0);
 }
 
+/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   nav { padding: 0 16px; }
   .nav-links { display: none; }
@@ -617,8 +666,9 @@ footer {
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <a class="nav-logo" href="/">
+  <a class="nav-logo" href="#">
     <svg class="nav-anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="5" r="3"/>
       <line x1="12" y1="8" x2="12" y2="22"/>
@@ -638,6 +688,7 @@ footer {
   </div>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
   <div class="hero-glow"></div>
   <div class="radar-ring"></div>
@@ -651,7 +702,7 @@ footer {
   </h1>
 
   <p class="hero-sub">
-    Ferramentas operacionais para profissionais do mar. Maré, notícias, monitoramento portuário e planejamento de carga — tudo em um lugar.
+    Ferramentas operacionais para profissionais do mar. Maré, inteligência de mercado, monitoramento portuário, planejamento de carga e consulta simultânea em todas as NORMAMs — tudo em um lugar.
   </p>
 
   <div class="hero-cta">
@@ -662,14 +713,15 @@ footer {
   <p class="hero-coords" id="clock">23°S 43°W · RIO DE JANEIRO · CARREGANDO...</p>
 </div>
 
+<!-- STATS -->
 <div class="stats-bar">
   <div class="stat reveal">
-    <div class="stat-val">4</div>
+    <div class="stat-val">5</div>
     <div class="stat-lbl">Ferramentas</div>
   </div>
   <div class="stat reveal">
     <div class="stat-val">4</div>
-    <div class="stat-lbl">Módulos online</div>
+    <div class="stat-lbl">Portos monitorados</div>
   </div>
   <div class="stat reveal">
     <div class="stat-val">24/7</div>
@@ -677,10 +729,11 @@ footer {
   </div>
   <div class="stat reveal">
     <div class="stat-val">100%</div>
-    <div class="stat-lbl">Web</div>
+    <div class="stat-lbl">Gratuito</div>
   </div>
 </div>
 
+<!-- FERRAMENTAS -->
 <section id="ferramentas">
   <p class="section-label reveal">01 · Ferramentas</p>
   <h2 class="section-title reveal">Arsenal do marítimo</h2>
@@ -688,14 +741,15 @@ footer {
 
   <div class="tools-grid">
 
-    <a href="/mare/" class="tool-card card-blue reveal">
+    <!-- Painel de Maré -->
+    <a href="http://vapozeiro.com.br/mare/" class="tool-card card-blue reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('mare', 'http://vapozeiro.com.br/mare/')">
       <div class="tool-icon">🌊</div>
       <div>
         <div class="tool-tag">Náutico</div>
         <div class="tool-name">Painel de Maré</div>
       </div>
       <p class="tool-desc">
-        Baixa-mar, preamar, tendência e amplitude em tempo real. Consulta rápida para qualquer ETA nos portos do Brasil.
+        Baixa-mar, preamar, tendência e amplitude em tempo real. Consulta rápida para qualquer ETA nos portos do Rio.
       </p>
       <div class="tool-meta">
         <span class="tool-status"><span class="dot"></span> ONLINE</span>
@@ -703,7 +757,8 @@ footer {
       </div>
     </a>
 
-    <a href="/vaponews/" class="tool-card card-green reveal">
+    <!-- Vapo News -->
+    <a href="http://vapozeiro.com.br/vaponews/" class="tool-card card-green reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('vaponews', 'http://vapozeiro.com.br/vaponews/')">
       <div class="tool-icon">📡</div>
       <div>
         <div class="tool-tag">Inteligência</div>
@@ -718,7 +773,8 @@ footer {
       </div>
     </a>
 
-    <a href="/sentinela/" class="tool-card card-yellow reveal">
+    <!-- Sentinela -->
+    <a href="http://vapozeiro.com.br/sentinela/" class="tool-card card-yellow reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('sentinela', 'http://vapozeiro.com.br/sentinela/')">
       <div class="tool-icon">👁️</div>
       <div>
         <div class="tool-tag">Monitoramento</div>
@@ -733,7 +789,8 @@ footer {
       </div>
     </a>
 
-    <a href="/plano/" class="tool-card card-red reveal">
+    <!-- Plano de Carga -->
+    <a href="http://vapozeiro.com.br/plano/" class="tool-card card-red reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('plano', 'http://vapozeiro.com.br/plano/')">
       <div class="tool-icon">⚓</div>
       <div>
         <div class="tool-tag">Operacional</div>
@@ -748,11 +805,29 @@ footer {
       </div>
     </a>
 
+
+    <!-- Buscador de NORMAMs -->
+    <a href="https://buscadornormam.onrender.com" class="tool-card card-blue reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('normams', 'https://buscadornormam.onrender.com')">
+      <div class="tool-icon">📘</div>
+      <div>
+        <div class="tool-tag">Consulta</div>
+        <div class="tool-name">Buscador de NORMAMs</div>
+      </div>
+      <p class="tool-desc">
+        Consulta simultânea em todas as normas da Marinha. Pesquise um tema uma única vez e veja o que cada NORMAM diz sobre o assunto.
+      </p>
+      <div class="tool-meta">
+        <span class="tool-status"><span class="dot"></span> ONLINE</span>
+        <span class="tool-arrow">→</span>
+      </div>
+    </a>
+
   </div>
 </section>
 
 <hr class="divider">
 
+<!-- SOBRE -->
 <section id="sobre">
   <p class="section-label reveal">02 · Sobre</p>
   <h2 class="section-title reveal">Feito por quem é do mar</h2>
@@ -769,11 +844,13 @@ footer {
         O projeto é <strong>gratuito e aberto</strong>. Se você tem uma ideia de ferramenta que faz falta no dia a dia marítimo, <a href="#contato" style="color:var(--signal);text-decoration:underline;text-underline-offset:3px;">entre em contato</a>.
       </p>
     </div>
+
+
   </div>
 </section>
 
+<!-- FALE CONOSCO -->
 <hr class="divider">
-
 <section id="contato">
   <p class="section-label reveal">03 · Contato</p>
   <h2 class="section-title reveal">Fale conosco</h2>
@@ -789,18 +866,21 @@ footer {
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div class="footer-brand"><span>VAPO</span>ZEIRO</div>
   <ul class="footer-links">
-    <li><a href="/mare/">Maré</a></li>
-    <li><a href="/vaponews/">News</a></li>
-    <li><a href="/sentinela/">Sentinela</a></li>
-    <li><a href="/plano/">Plano de Carga</a></li>
+    <li><a href="http://vapozeiro.com.br/mare/" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('mare_footer', 'http://vapozeiro.com.br/mare/')">Maré</a></li>
+    <li><a href="http://vapozeiro.com.br/vaponews/" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('vaponews_footer', 'http://vapozeiro.com.br/vaponews/')">News</a></li>
+    <li><a href="http://vapozeiro.com.br/sentinela/" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('sentinela_footer', 'http://vapozeiro.com.br/sentinela/')">Sentinela</a></li>
+    <li><a href="http://vapozeiro.com.br/plano/" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('plano_footer', 'http://vapozeiro.com.br/plano/')">Plano de Carga</a></li>
+    <li><a href="https://buscadornormam.onrender.com" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('normams_footer', 'https://buscadornormam.onrender.com')">NORMAMs</a></li>
   </ul>
   <div class="footer-copy" id="footerYear">© 2025 · vapozeiro.com.br</div>
 </footer>
 
 <script>
+// Clock + coords
 function updateClock(){
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,'0');
@@ -812,9 +892,11 @@ function updateClock(){
 updateClock();
 setInterval(updateClock, 1000);
 
+// Footer year
 document.getElementById('footerYear').textContent =
   `© ${new Date().getFullYear()} · vapozeiro.com.br`;
 
+// Scroll reveal
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
