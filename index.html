@@ -170,13 +170,13 @@ nav {
 .hero {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: clamp(380px, 52vh, 520px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 80px 24px 60px;
+  padding: 48px 24px 16px;
   overflow: hidden;
 }
 
@@ -234,7 +234,7 @@ nav {
 .hero-title .hl { color: var(--signal); }
 
 .hero-sub {
-  margin-top: 20px;
+  margin-top: 14px;
   font-size: 16px;
   font-weight: 400;
   color: var(--text2);
@@ -294,7 +294,7 @@ nav {
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: rgba(56,189,248,.06); }
 
 .hero-coords {
-  margin-top: 60px;
+  margin-top: 20px;
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px;
   color: var(--muted);
@@ -315,6 +315,10 @@ section {
   padding: 80px 24px;
   max-width: 1100px;
   margin: 0 auto;
+}
+
+#radar {
+  margin-top: -42px;
 }
 
 .section-label {
@@ -482,7 +486,7 @@ section {
   background: var(--surface);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 28px 40px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -494,7 +498,7 @@ section {
   flex: 1;
   min-width: 160px;
   text-align: center;
-  padding: 12px 24px;
+  padding: 6px 12px;
   border-right: 1px solid var(--border);
 }
 
@@ -502,20 +506,20 @@ section {
 
 .stat-val {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 32px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--signal);
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   line-height: 1;
 }
 
 .stat-lbl {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 6px;
+  margin-top: 2px;
 }
 
 /* ── ABOUT ── */
@@ -658,10 +662,293 @@ footer {
 @media (max-width: 600px) {
   nav { padding: 0 16px; }
   .nav-links { display: none; }
-  .stats-bar { padding: 16px; }
-  .stat { min-width: 120px; }
+  .stats-bar { padding: 8px 10px; }
+  .stat { min-width: 120px; padding: 5px 8px; }
   footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+  .hero {
+    min-height: 360px;
+    padding: 44px 18px 10px;
+  }
+  #radar {
+    margin-top: -18px;
+  }
 }
+
+/* ── RADAR DO DIA ── */
+.radar-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.9fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.radar-topline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.radar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,255,136,.18);
+  background: rgba(0,255,136,.06);
+  color: var(--signal);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.radar-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 12px rgba(0,255,136,.45);
+}
+
+.radar-topline-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.radar-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: linear-gradient(180deg, rgba(10,31,48,.96), rgba(6,19,31,.98));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+
+.radar-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56,189,248,.4);
+  box-shadow: 0 14px 40px rgba(0,0,0,.45);
+}
+
+.radar-card-image {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, rgba(56,189,248,.18), rgba(0,255,136,.12));
+  overflow: hidden;
+}
+
+.radar-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.98);
+}
+
+.radar-card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7,17,26,.05), rgba(7,17,26,.28));
+  pointer-events: none;
+}
+
+.radar-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 18px;
+  flex: 1;
+}
+
+.radar-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.radar-source {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.radar-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.radar-badge.brazil {
+  color: var(--signal);
+  background: rgba(0,255,136,.08);
+  border-color: rgba(0,255,136,.2);
+}
+
+.radar-badge.international {
+  color: var(--accent);
+  background: rgba(56,189,248,.08);
+  border-color: rgba(56,189,248,.22);
+}
+
+.radar-card-title {
+  font-family: 'Barlow', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  line-height: 1.18;
+  text-transform: none;
+  color: var(--text);
+  margin: 0;
+}
+
+.radar-card-summary {
+  font-size: 14px;
+  line-height: 1.62;
+  color: var(--text2);
+  font-family: 'Barlow', sans-serif;
+  margin: 0;
+}
+
+.radar-card-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.radar-empty {
+  grid-column: 1 / -1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  color: var(--text2);
+  font-family: 'Barlow', sans-serif;
+  line-height: 1.6;
+}
+
+.vapo-reading {
+  background: linear-gradient(180deg, rgba(8,26,42,.96), rgba(7,18,30,.98));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--signal);
+  border-radius: 14px;
+  padding: 22px 22px 24px;
+  min-height: 100%;
+}
+
+.vapo-reading-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--signal);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.vapo-reading-title {
+  font-size: clamp(28px, 3.1vw, 46px);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.vapo-reading-body {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text2);
+}
+
+.vapo-reading-cta {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.vapo-reading-link {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.vapo-reading-link:hover {
+  color: var(--text);
+}
+
+@media (max-width: 980px) {
+  .radar-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .radar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .radar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .radar-card-image {
+    height: 190px;
+  }
+
+  .radar-card-title {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .radar-card-summary {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .vapo-reading-title {
+    font-size: 34px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -705,18 +992,13 @@ footer {
     Ferramentas operacionais para profissionais do mar. Maré, inteligência de mercado, monitoramento portuário, planejamento de carga e consulta simultânea em todas as NORMAMs — tudo em um lugar.
   </p>
 
-  <div class="hero-cta">
-    <a href="#ferramentas" class="btn-primary">Ver ferramentas</a>
-    <a href="#sobre" class="btn-secondary">Sobre o projeto</a>
-  </div>
-
   <p class="hero-coords" id="clock">23°S 43°W · RIO DE JANEIRO · CARREGANDO...</p>
 </div>
 
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stat reveal">
-    <div class="stat-val">5</div>
+    <div class="stat-val">6</div>
     <div class="stat-lbl">Ferramentas</div>
   </div>
   <div class="stat reveal">
@@ -733,9 +1015,43 @@ footer {
   </div>
 </div>
 
+
+<!-- RADAR DO DIA -->
+<section id="radar">
+  <div class="radar-topline reveal">
+    
+    <div class="radar-topline-meta" id="radar-count">Sincronizando radar...</div>
+  </div>
+
+  <p class="section-label reveal">01 · Radar do dia</p>
+  <h2 class="section-title reveal">Radar do dia</h2>
+  <p class="section-desc reveal">Os destaques mais relevantes do cenário marítimo e a Leitura VAPO do dia.</p>
+
+  <div class="radar-shell">
+    <div class="radar-left">
+      <div id="radar-cards" class="radar-grid reveal">
+        <div class="radar-empty">Aguarde… sincronizando radar marítimo.</div>
+      </div>
+    </div>
+
+    <aside class="vapo-reading reveal">
+      <div class="vapo-reading-label">Leitura VAPO</div>
+      <h3 class="vapo-reading-title" id="vapo-reading-title">Carregando leitura do dia...</h3>
+      <div class="vapo-reading-body" id="vapo-reading-body">
+        A análise editorial do VAPO News será exibida automaticamente aqui.
+      </div>
+      <div class="vapo-reading-cta">
+        <a href="https://vapozeiro.com.br/vaponews/" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="trackToolClick('vaponews_radar_cta', 'https://vapozeiro.com.br/vaponews/')">Abrir o radar completo do dia</a>
+        <a href="https://vapozeiro.com.br/vaponews/" target="_blank" rel="noopener noreferrer" class="vapo-reading-link" onclick="trackToolClick('vaponews_radar_link', 'https://vapozeiro.com.br/vaponews/')">Ver VAPO News completo →</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+
 <!-- FERRAMENTAS -->
 <section id="ferramentas">
-  <p class="section-label reveal">01 · Ferramentas</p>
+  <p class="section-label reveal">02 · Ferramentas</p>
   <h2 class="section-title reveal">Arsenal do marítimo</h2>
   <p class="section-desc reveal">Cada ferramenta foi construída para resolver um problema real de quem trabalha no setor.</p>
 
@@ -822,6 +1138,23 @@ footer {
       </div>
     </a>
 
+
+    <!-- Frota Offshore -->
+    <a href="https://vapozeiro.com.br/frotaoffshore/" class="tool-card card-green reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('frota_offshore', 'https://vapozeiro.com.br/frotaoffshore/')">
+      <div class="tool-icon">🚢</div>
+      <div>
+        <div class="tool-tag">Frota</div>
+        <div class="tool-name">Frota Offshore</div>
+      </div>
+      <p class="tool-desc">
+        Frota offshore brasileira. Dados oficiais com visão de composição, bandeira e distribuição operacional.
+      </p>
+      <div class="tool-meta">
+        <span class="tool-status"><span class="dot"></span> ONLINE</span>
+        <span class="tool-arrow">→</span>
+      </div>
+    </a>
+
   </div>
 </section>
 
@@ -829,7 +1162,7 @@ footer {
 
 <!-- SOBRE -->
 <section id="sobre">
-  <p class="section-label reveal">02 · Sobre</p>
+  <p class="section-label reveal">03 · Sobre</p>
   <h2 class="section-title reveal">Feito por quem é do mar</h2>
 
   <div class="about-grid">
@@ -852,7 +1185,7 @@ footer {
 <!-- FALE CONOSCO -->
 <hr class="divider">
 <section id="contato">
-  <p class="section-label reveal">03 · Contato</p>
+  <p class="section-label reveal">04 · Contato</p>
   <h2 class="section-title reveal">Fale conosco</h2>
   <p class="section-desc reveal">Sugestão de ferramenta, bug, parceria ou só um oi — a gente responde.</p>
 
@@ -891,6 +1224,119 @@ function updateClock(){
 }
 updateClock();
 setInterval(updateClock, 1000);
+
+
+async function carregarRadarLanding() {
+  const container = document.getElementById('radar-cards');
+  const countEl = document.getElementById('radar-count');
+  const readingTitle = document.getElementById('vapo-reading-title');
+  const readingBody = document.getElementById('vapo-reading-body');
+
+  if (!container) return;
+
+  try {
+    const resp = await fetch('https://vapozeiro.com.br/vaponews/output/radar.json', { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const data = await resp.json();
+    const allNews = Array.isArray(data.all_news) ? data.all_news : [];
+    const highlights = Array.isArray(data.highlights) ? data.highlights : [];
+
+    const pool = highlights.length ? highlights : allNews;
+    const brasil = pool.filter(item => item && item.editorial_category === 'brazil');
+    const internacional = pool.filter(item => item && item.editorial_category === 'international');
+
+    let selecionadas = [
+      ...brasil.slice(0, 2),
+      ...internacional.slice(0, 1)
+    ];
+
+    if (selecionadas.length < 3) {
+      const usados = new Set(selecionadas.map(item => item.id));
+      const restantes = pool.filter(item => item && !usados.has(item.id));
+      selecionadas = [...selecionadas, ...restantes.slice(0, 3 - selecionadas.length)];
+    }
+
+    countEl.textContent = `${allNews.length || pool.length || selecionadas.length} notícias no radar`;
+
+    container.innerHTML = '';
+
+    if (!selecionadas.length) {
+      container.innerHTML = '<div class="radar-empty">Nenhum destaque disponível no momento.</div>';
+      return;
+    }
+
+    const fallbackImage = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop stop-color="#17384d" offset="0"/>
+            <stop stop-color="#0a1724" offset="1"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="420" fill="url(#g)"/>
+        <g opacity="0.14" stroke="#38bdf8">
+          <path d="M0 60h800M0 120h800M0 180h800M0 240h800M0 300h800M0 360h800"/>
+          <path d="M80 0v420M160 0v420M240 0v420M320 0v420M400 0v420M480 0v420M560 0v420M640 0v420M720 0v420"/>
+        </g>
+        <text x="50%" y="48%" dominant-baseline="middle" text-anchor="middle" fill="#dceef8" font-family="Arial" font-size="46" font-weight="700">VAPO NEWS</text>
+        <text x="50%" y="61%" dominant-baseline="middle" text-anchor="middle" fill="#00ff88" font-family="Arial" font-size="18" letter-spacing="6">RADAR DO DIA</text>
+      </svg>
+    `);
+
+    selecionadas.forEach(item => {
+      const badgeText = item.editorial_category === 'brazil' ? 'Brasil' : (item.editorial_category === 'international' ? 'Internacional' : 'Radar');
+      const badgeClass = item.editorial_category === 'international' ? 'international' : 'brazil';
+      const card = document.createElement('a');
+      card.className = 'radar-card';
+      card.href = 'https://vapozeiro.com.br/vaponews/';
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+
+      const title = item.title || 'Sem título';
+      const summary = item.summary || 'A principal notícia será exibida automaticamente aqui.';
+      const source = item.source || 'VAPO News';
+      const image = item.image_url || fallbackImage;
+
+      card.innerHTML = `
+        <div class="radar-card-image">
+          <img src="${image}" alt="${title.replace(/"/g, '&quot;')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackImage}'">
+        </div>
+        <div class="radar-card-body">
+          <div class="radar-meta">
+            <span class="radar-source">${source}</span>
+            <span class="radar-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <h3 class="radar-card-title">${title}</h3>
+          <p class="radar-card-summary">${summary}</p>
+          <div class="radar-card-footer">
+            <span>Abrir notícia</span>
+            <span>→</span>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    if (data.ai_column) {
+      readingTitle.textContent = data.ai_column.title || 'Leitura VAPO';
+      readingBody.textContent = data.ai_column.preview || data.ai_column.body || 'A análise editorial do dia será exibida aqui automaticamente.';
+    } else {
+      readingTitle.textContent = 'Leitura VAPO indisponível';
+      readingBody.textContent = 'A análise editorial do dia não está disponível neste momento.';
+    }
+  } catch (error) {
+    console.error('Erro ao carregar radar da landing:', error);
+    if (countEl) countEl.textContent = 'Radar temporariamente indisponível';
+    container.innerHTML = '<div class="radar-empty">Não foi possível carregar o radar no momento. Tente novamente em instantes.</div>';
+    if (readingTitle) readingTitle.textContent = 'Leitura VAPO indisponível';
+    if (readingBody) readingBody.textContent = 'A análise editorial do dia não pôde ser carregada agora.';
+  }
+}
+
+window.addEventListener('load', carregarRadarLanding);
+
 
 // Footer year
 document.getElementById('footerYear').textContent =
