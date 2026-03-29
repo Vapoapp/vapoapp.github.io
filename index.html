@@ -1271,19 +1271,51 @@ async function carregarRadarLanding() {
       return urlKey || titleKey;
     };
 
-    const noticiasUnicas = [];
-    const noticiasJaVistas = new Set();
+    const dedupeNews = (items) => {
+      const unicas = [];
+      const vistas = new Set();
 
-    for (const item of pool) {
-      if (!item) continue;
-      const key = getNewsKey(item);
-      if (!key || noticiasJaVistas.has(key)) continue;
-      noticiasJaVistas.add(key);
-      noticiasUnicas.push(item);
-    }
+      for (const item of items) {
+        if (!item) continue;
+        const key = getNewsKey(item);
+        if (!key || vistas.has(key)) continue;
+        vistas.add(key);
+        unicas.push(item);
+      }
 
-    const brasil = noticiasUnicas.filter(item => item && item.editorial_category === 'brazil');
-    const internacional = noticiasUnicas.filter(item => item && item.editorial_category === 'international');
+      return unicas;
+    };
+
+    const poolUnico = dedupeNews(pool);
+    const allNewsUnico = dedupeNews(allNews);
+
+    const combinarSemDuplicar = (...listas) => {
+      const resultado = [];
+      const vistas = new Set();
+
+      for (const lista of listas) {
+        for (const item of lista) {
+          const key = getNewsKey(item);
+          if (!key || vistas.has(key)) continue;
+          vistas.add(key);
+          resultado.push(item);
+        }
+      }
+
+      return resultado;
+    };
+
+    const candidatosBrasil = combinarSemDuplicar(
+      poolUnico.filter(item => item && item.editorial_category === 'brazil'),
+      allNewsUnico.filter(item => item && item.editorial_category === 'brazil')
+    );
+
+    const candidatosInternacional = combinarSemDuplicar(
+      poolUnico.filter(item => item && item.editorial_category === 'international'),
+      allNewsUnico.filter(item => item && item.editorial_category === 'international')
+    );
+
+    const candidatosGerais = combinarSemDuplicar(poolUnico, allNewsUnico);
 
     const selecionadas = [];
     const fontesUsadas = new Set();
@@ -1305,28 +1337,39 @@ async function carregarRadarLanding() {
       noticiasUsadas.add(newsKey);
     };
 
-    for (const item of brasil) {
+    let brasilSelecionadas = 0;
+    let internacionalSelecionadas = 0;
+
+    for (const item of candidatosBrasil) {
       if (podeUsar(item)) {
         adicionarNoticia(item);
+        brasilSelecionadas += 1;
       }
-      if (selecionadas.length === 2) break;
+      if (brasilSelecionadas === 2) break;
     }
 
-    for (const item of internacional) {
+    for (const item of candidatosInternacional) {
       if (podeUsar(item)) {
         adicionarNoticia(item);
+        internacionalSelecionadas += 1;
         break;
       }
     }
 
     if (selecionadas.length < 3) {
-      const restantes = noticiasUnicas.filter(item => podeUsar(item));
+      const restantes = candidatosGerais.filter(item => podeUsar(item));
 
       for (const item of restantes) {
         adicionarNoticia(item);
         if (selecionadas.length === 3) break;
       }
     }
+
+    selecionadas.sort((a, b) => {
+      const aBrazil = a?.editorial_category === 'brazil' ? 0 : 1;
+      const bBrazil = b?.editorial_category === 'brazil' ? 0 : 1;
+      return aBrazil - bBrazil;
+    });
 
     countEl.innerHTML = '<span class="vapo">VAPO</span> <span class="news">News</span>';
 
