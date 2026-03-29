@@ -1257,15 +1257,33 @@ async function carregarRadarLanding() {
     const brasil = pool.filter(item => item && item.editorial_category === 'brazil');
     const internacional = pool.filter(item => item && item.editorial_category === 'international');
 
-    let selecionadas = [
-      ...brasil.slice(0, 2),
-      ...internacional.slice(0, 1)
-    ];
+    const selecionadas = [];
+    const fontesUsadas = new Set();
+
+    for (const item of brasil) {
+      if (item && item.source && !fontesUsadas.has(item.source)) {
+        selecionadas.push(item);
+        fontesUsadas.add(item.source);
+      }
+      if (selecionadas.length === 2) break;
+    }
+
+    for (const item of internacional) {
+      if (item && item.source && !fontesUsadas.has(item.source)) {
+        selecionadas.push(item);
+        fontesUsadas.add(item.source);
+        break;
+      }
+    }
 
     if (selecionadas.length < 3) {
-      const usados = new Set(selecionadas.map(item => item.id));
-      const restantes = pool.filter(item => item && !usados.has(item.id));
-      selecionadas = [...selecionadas, ...restantes.slice(0, 3 - selecionadas.length)];
+      const restantes = pool.filter(item => item && item.source && !fontesUsadas.has(item.source));
+
+      for (const item of restantes) {
+        selecionadas.push(item);
+        fontesUsadas.add(item.source);
+        if (selecionadas.length === 3) break;
+      }
     }
 
     countEl.innerHTML = '<span class="vapo">VAPO</span> <span class="news">News</span>';
