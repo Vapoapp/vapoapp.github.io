@@ -1254,34 +1254,76 @@ async function carregarRadarLanding() {
     const highlights = Array.isArray(data.highlights) ? data.highlights : [];
 
     const pool = highlights.length ? highlights : allNews;
-    const brasil = pool.filter(item => item && item.editorial_category === 'brazil');
-    const internacional = pool.filter(item => item && item.editorial_category === 'international');
+
+    const normalizeText = (value) => (value || '')
+      .toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/https?:\/\//g, '')
+      .replace(/www\./g, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+
+    const getNewsKey = (item) => {
+      const urlKey = normalizeText(item?.url || item?.link || '');
+      const titleKey = normalizeText(item?.title || '');
+      return urlKey || titleKey;
+    };
+
+    const noticiasUnicas = [];
+    const noticiasJaVistas = new Set();
+
+    for (const item of pool) {
+      if (!item) continue;
+      const key = getNewsKey(item);
+      if (!key || noticiasJaVistas.has(key)) continue;
+      noticiasJaVistas.add(key);
+      noticiasUnicas.push(item);
+    }
+
+    const brasil = noticiasUnicas.filter(item => item && item.editorial_category === 'brazil');
+    const internacional = noticiasUnicas.filter(item => item && item.editorial_category === 'international');
 
     const selecionadas = [];
     const fontesUsadas = new Set();
+    const noticiasUsadas = new Set();
+
+    const podeUsar = (item) => {
+      if (!item || !item.source) return false;
+      const newsKey = getNewsKey(item);
+      if (!newsKey) return false;
+      if (fontesUsadas.has(item.source)) return false;
+      if (noticiasUsadas.has(newsKey)) return false;
+      return true;
+    };
+
+    const adicionarNoticia = (item) => {
+      const newsKey = getNewsKey(item);
+      selecionadas.push(item);
+      fontesUsadas.add(item.source);
+      noticiasUsadas.add(newsKey);
+    };
 
     for (const item of brasil) {
-      if (item && item.source && !fontesUsadas.has(item.source)) {
-        selecionadas.push(item);
-        fontesUsadas.add(item.source);
+      if (podeUsar(item)) {
+        adicionarNoticia(item);
       }
       if (selecionadas.length === 2) break;
     }
 
     for (const item of internacional) {
-      if (item && item.source && !fontesUsadas.has(item.source)) {
-        selecionadas.push(item);
-        fontesUsadas.add(item.source);
+      if (podeUsar(item)) {
+        adicionarNoticia(item);
         break;
       }
     }
 
     if (selecionadas.length < 3) {
-      const restantes = pool.filter(item => item && item.source && !fontesUsadas.has(item.source));
+      const restantes = noticiasUnicas.filter(item => podeUsar(item));
 
       for (const item of restantes) {
-        selecionadas.push(item);
-        fontesUsadas.add(item.source);
+        adicionarNoticia(item);
         if (selecionadas.length === 3) break;
       }
     }
