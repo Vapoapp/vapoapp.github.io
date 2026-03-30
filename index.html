@@ -405,7 +405,109 @@ section {
   line-height: 1;
 }
 
+.tool-icon svg {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+
+
+
+
+.tool-icon.lighthouse {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: var(--card-accent, var(--signal));
+  overflow: visible;
+  margin-bottom: 2px;
+}
+
+.tool-icon.lighthouse::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,208,0,.72) 0%, rgba(255,208,0,.22) 48%, transparent 78%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tool-icon.lighthouse .beam-sweep {
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: 0 0;
+  animation: lighthouseSweep180 2.8s linear infinite;
+}
+
+.tool-icon.lighthouse .beam-sweep::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -5px;
+  width: 64px;
+  height: 12px;
+  transform-origin: 0 50%;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255,208,0,1) 0%,
+    rgba(255,208,0,.45) 45%,
+    rgba(255,208,0,0) 100%
+  );
+  filter: blur(1.1px);
+}
+
+.tool-icon.lighthouse .beam-sweep::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,208,0,.30) 0%, rgba(255,208,0,.10) 48%, transparent 78%);
+}
+
+.tool-icon.lighthouse svg {
+  position: relative;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 0 10px rgba(255,208,0,.18));
+}
+
+.tool-card:hover .tool-icon.lighthouse svg {
+  filter: drop-shadow(0 0 14px rgba(255,208,0,.28));
+}
+
+@keyframes lighthouseSweep180 {
+  0%   { transform: rotate(180deg); opacity: 0; }
+  10%  { opacity: .6; }
+  50%  { opacity: 1; }   /* mais forte "de frente" */
+  90%  { opacity: .6; }
+  100% { transform: rotate(360deg); opacity: 0; }
+}
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: rotate(360deg); opacity: 0; }
+}
+
 .tool-tag {
+
   font-family: 'Share Tech Mono', monospace;
   font-size: 9px;
   letter-spacing: 3px;
@@ -1102,7 +1204,18 @@ footer {
 
     <!-- Sentinela -->
     <a href="http://vapozeiro.com.br/sentinela/" class="tool-card card-yellow reveal" target="_blank" rel="noopener noreferrer" onclick="trackToolClick('sentinela', 'http://vapozeiro.com.br/sentinela/')">
-      <div class="tool-icon">👁️</div>
+      <div class="tool-icon lighthouse" aria-hidden="true">
+        <div class="beam-sweep"></div>
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26 56 L30 16 H34 L38 56 Z" fill="currentColor" opacity="0.18"/>
+          <path d="M25 56 H39" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M29.5 16 H34.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M27 46 H37" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M28 36 H36" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M29 26 H35" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="32" cy="16" r="2.6" fill="currentColor"/>
+        </svg>
+      </div>
       <div>
         <div class="tool-tag">Monitoramento</div>
         <div class="tool-name">Sentinela</div>
